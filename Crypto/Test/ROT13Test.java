@@ -30,7 +30,8 @@ public class ROT13Test {
         String actual = cipher.rotate(s1, 'D');
 
         // Then
-        assertTrue(actual.equals(s2));
+        assertEquals(s2, actual);
+//        assertTrue(actual.equals(s2));
     }
 
     @Test
