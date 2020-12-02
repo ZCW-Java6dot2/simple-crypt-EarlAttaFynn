@@ -1,14 +1,15 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
-import static java.lang.Character.*;
+import java.io.*;
 
 public class ROT13 {
 
     private static int shift;
+    private char lowerBound;
+    private char upperBound;
 
 
     ROT13(Character cs, Character cf) {
+        this.lowerBound = cs;
+        this.upperBound = cf;
         shift = (int) cf - (int) cs;
     }
 
@@ -65,7 +66,7 @@ public class ROT13 {
         return crypt(text);
     }
 
-    public static String rotate(String s, Character c) {
+    public String rotate(String s, Character c) {
         //Declarations
         int val;
         int cycle;
@@ -76,17 +77,12 @@ public class ROT13 {
         StringBuilder result = new StringBuilder();
         char[] chars = s.toCharArray();
 
-        //Calculate cycle
-        //length of alphabet decides cycling behavior
         if (Character.isUpperCase(c)) {
             offset = c - 'A';
         } else {
             offset = c - 'a';
         }
 
-        /*
-          Modular algorithm
-         */
         for (Character e : chars) {
             val = (int) e;
             //if .isUpperCase
@@ -116,24 +112,29 @@ public class ROT13 {
         return result.toString();
     }
 
-    public void readSonnet(String text) {
+    public void encryptFile(File file) {
         try {
-            FileReader read = new FileReader("/Users/earl/Dev/Labs/simple-crypt-EarlAttaFynn/sonnet18.txt");
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            FileWriter fileWriter = new FileWriter("file.enc");
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(crypt(line));
+                fileWriter.write(crypt(line) + "\n");
+            }
+            fileWriter.close();
 
         } catch (FileNotFoundException exception){
             exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
+
     public static void main(String[] args) {
-
-        try {
-            FileReader read = new FileReader("/Users/earl/Dev/Labs/simple-crypt-EarlAttaFynn/sonnet18.txt");
-
-        } catch (FileNotFoundException exception){
-            exception.printStackTrace();
-        }
-
+        ROT13 rot13 = new ROT13();
+        rot13.encryptFile(new File("/Users/earl/Dev/Labs/simple-crypt-EarlAttaFynn/sonnet18.txt"));
     }
 }
 
